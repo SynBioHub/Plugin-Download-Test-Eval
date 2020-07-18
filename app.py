@@ -12,6 +12,7 @@ def evaluate():
     data = request.get_json(force=True)
     rdf_type = data['type']
     
+    ########## REPLACE THIS SECTION WITH OWN RUN CODE #################
     cwd = os.getcwd()
     
     eval_dir = os.path.join(cwd, "eval_temp")
@@ -30,8 +31,7 @@ def evaluate():
     filename = os.path.join(cwd, 'eval_dir', out_name)
     with open(filename, 'w') as out_file:
         out_file.write(str(data))
-    
-    ########## REPLACE THIS SECTION WITH OWN RUN CODE #################
+        
     #uses rdf types
     accepted_types = {'Activity', 'Agent', 'Association', 'Attachment', 'Collection',
                       'CombinatorialDerivation', 'ComponentInstance',
@@ -45,8 +45,8 @@ def evaluate():
     
     acceptable = rdf_type in accepted_types
     
-    # #to ensure it shows up on all pages
-    # acceptable = True
+    #to ensure it shows up on all pages
+    acceptable = True
     ################## END SECTION ####################################
     
     if acceptable:

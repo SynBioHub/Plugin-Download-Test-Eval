@@ -28,13 +28,13 @@ def evaluate():
     
     #write out file
     out_name = "Evaluate_manifest.txt"
-    filename = os.path.join(cwd, 'eval_dir', out_name)
+    filename = os.path.join(cwd, 'eval_temp', out_name)
     with open(filename, 'w') as out_file:
         out_file.write(str(data))
         
     #uses rdf types
     accepted_types = {'Activity', 'Agent', 'Association', 'Attachment', 'Collection',
-                      'CombinatorialDerivation', 'ComponentInstance',
+                      'CombinatorialDerivation', 'Componenet', 'ComponentInstance',
                       'Cut', 'Experiment', 'ExperimentalData',
                       'FunctionalComponent','GenericLocation',
                       'Implementation', 'Interaction', 'Location',
@@ -88,7 +88,7 @@ def run():
             result = htmlfile.read()
         
         #read in file of eval data
-        filename = os.path.join(cwd, "eval_dir", "Evaluate_manifest.txt" )
+        filename = os.path.join(cwd, "eval_temp", "Evaluate_manifest.txt" )
         with open(filename, 'r') as evalfile:
             eval_data = evalfile.read()
             

@@ -1,5 +1,5 @@
 from flask import Flask, request, abort, send_from_directory
-import os, shutil
+import os, shutil, tempfile
 
 app = Flask(__name__)
 
@@ -9,8 +9,12 @@ def status():
 
 @app.route("/evaluate", methods=["POST"])
 def evaluate():
+    #NOT GOOD PRACTICE AS MIGHT GET FILE THAT BELONGS TO ANOTHER CALL
+    #OR DELETE BEFORE YOU CAN SEND
+    
     data = request.get_json(force=True)
     rdf_type = data['type']
+    
     
     ########## REPLACE THIS SECTION WITH OWN RUN CODE #################
     cwd = os.getcwd()
@@ -58,16 +62,8 @@ def evaluate():
 def run():
     cwd = os.getcwd()
     
-    temp_dir = os.path.join(cwd, "temp_dir")
-    
-    #remove to temp directory if it exists
-    try:
-        shutil.rmtree(temp_dir, ignore_errors=True)
-    except:
-        print("No To_zip exists currently")
-    
-    #make temp_dir directory
-    os.makedirs(temp_dir)
+    #temporary directory to write intermediate files to
+    temp_dir = tempfile.TemporaryDirectory()
     
     data = request.get_json(force=True)
     
@@ -101,7 +97,7 @@ def run():
         
         #write out file
         out_name = "Out.html"
-        filename = os.path.join(cwd, 'temp_dir', out_name)
+        filename = os.path.join(temp_dir.name, out_name)
         with open(filename, 'w') as out_file:
             out_file.write(result)
         
@@ -109,11 +105,8 @@ def run():
         download_file_name = out_name
         ################## END SECTION ####################################
         
-        return send_from_directory(temp_dir,download_file_name)
-        # return("Hello")
-        
-        #clear temp_dir directory
-        shutil.rmtree(temp_dir, ignore_errors=True)
+        return  send_from_directory(temp_dir.name,download_file_name, 
+                    as_attachment=True, attachment_filename=out_name)
         
     except Exception as e:
         print(e)
